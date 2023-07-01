@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class HomeBloc {
   addEmployee(BuildContext context) {
-    Navigator.of(context).push(
+    Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => AddEmployeePage(),
+        builder: (context) => const EmployeePage(),
       ),
     );
   }

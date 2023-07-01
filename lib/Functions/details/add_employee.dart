@@ -1,23 +1,33 @@
 import 'package:demo_employee_app/Core/colors/ui_colors.dart';
+import 'package:demo_employee_app/Functions/details/add_employee_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class AddEmployeePage extends StatefulWidget {
-  const AddEmployeePage({super.key});
+class EmployeePage extends StatefulWidget {
+  final String title;
+  const EmployeePage({super.key, this.title = 'Add Employee Details'});
 
   @override
-  State<AddEmployeePage> createState() => _AddEmployeePageState();
+  State<EmployeePage> createState() => _AddEmployeePageState();
 }
 
-class _AddEmployeePageState extends State<AddEmployeePage> {
+class _AddEmployeePageState extends State<EmployeePage> {
+  late EmployeeBloc employeeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    employeeBloc = EmployeeBloc();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UIColors.base,
         title: Text(
-          'Add Employee Details',
+          widget.title,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.sp,
@@ -42,6 +52,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
             SizedBox(
               height: 40.h,
               child: TextField(
+                controller: employeeBloc.nameCtrl,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(8.sp),
                   prefixIcon: Padding(
@@ -71,6 +82,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
               height: 40.h,
               child: TextField(
                 readOnly: true,
+                controller: employeeBloc.designationCtrl,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(8.sp),
                   prefixIcon: Padding(
@@ -88,7 +100,9 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                     fontWeight: FontWeight.w400,
                   ),
                   suffixIcon: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        employeeBloc.showDropDown(context);
+                      },
                       icon: const Icon(
                         Icons.arrow_drop_down_rounded,
                         color: UIColors.base,
@@ -106,20 +120,23 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  flex: 1,
+                  flex: 6,
                   child: SizedBox(
                     height: 40.h,
+                    // width: 172.w,
                     child: TextField(
+                      controller: employeeBloc.startDateCtrl,
+                      readOnly: true,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8.sp),
                         prefixIcon: Padding(
                           padding: EdgeInsets.all(4.sp),
                           child: SvgPicture.asset(
-                            'assets/images/person.svg',
+                            'assets/images/event.svg',
                             fit: BoxFit.contain,
                           ),
                         ),
-                        hintText: 'Employee name',
+                        hintText: 'No date',
                         hintStyle: TextStyle(
                           color: const Color(0xFF949C9E),
                           fontSize: 16.sp,
@@ -133,26 +150,35 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                     ),
                   ),
                 ),
+                const Spacer(
+                  flex: 1,
+                ),
                 Icon(
                   Icons.arrow_forward_rounded,
                   color: UIColors.base,
                   size: 20.sp,
                 ),
-                Expanded(
+                const Spacer(
                   flex: 1,
+                ),
+                Expanded(
+                  flex: 6,
                   child: SizedBox(
                     height: 40.h,
+                    // width: 172.w,
                     child: TextField(
+                      controller: employeeBloc.endDateCtrl,
+                      readOnly: true,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8.sp),
                         prefixIcon: Padding(
                           padding: EdgeInsets.all(4.sp),
                           child: SvgPicture.asset(
-                            'assets/images/person.svg',
+                            'assets/images/event.svg',
                             fit: BoxFit.contain,
                           ),
                         ),
-                        hintText: 'Employee name',
+                        hintText: 'No date',
                         hintStyle: TextStyle(
                           color: const Color(0xFF949C9E),
                           fontSize: 16.sp,
