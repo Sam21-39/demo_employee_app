@@ -53,6 +53,12 @@ class _AddEmployeePageState extends State<EmployeePage> {
               height: 40.h,
               child: TextField(
                 controller: employeeBloc.nameCtrl,
+                style: TextStyle(
+                  color: UIColors.text,
+                  fontSize: 16.sp,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w400,
+                ),
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(8.sp),
                   prefixIcon: Padding(
@@ -83,6 +89,15 @@ class _AddEmployeePageState extends State<EmployeePage> {
               child: TextField(
                 readOnly: true,
                 controller: employeeBloc.designationCtrl,
+                onTap: () {
+                  employeeBloc.showDesignationDropDown(context);
+                },
+                style: TextStyle(
+                  color: UIColors.text,
+                  fontSize: 16.sp,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w400,
+                ),
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(8.sp),
                   prefixIcon: Padding(
@@ -101,7 +116,7 @@ class _AddEmployeePageState extends State<EmployeePage> {
                   ),
                   suffixIcon: IconButton(
                       onPressed: () {
-                        employeeBloc.showDropDown(context);
+                        employeeBloc.showDesignationDropDown(context);
                       },
                       icon: const Icon(
                         Icons.arrow_drop_down_rounded,
@@ -127,6 +142,15 @@ class _AddEmployeePageState extends State<EmployeePage> {
                     child: TextField(
                       controller: employeeBloc.startDateCtrl,
                       readOnly: true,
+                      onTap: () {
+                        employeeBloc.showCalender(context);
+                      },
+                      style: TextStyle(
+                        color: UIColors.text,
+                        fontSize: 16.sp,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w400,
+                      ),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8.sp),
                         prefixIcon: Padding(
@@ -169,6 +193,18 @@ class _AddEmployeePageState extends State<EmployeePage> {
                     child: TextField(
                       controller: employeeBloc.endDateCtrl,
                       readOnly: true,
+                      onTap: () {
+                        employeeBloc.showCalender(
+                          context,
+                          isStartCalender: false,
+                        );
+                      },
+                      style: TextStyle(
+                        color: UIColors.text,
+                        fontSize: 16.sp,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w400,
+                      ),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8.sp),
                         prefixIcon: Padding(

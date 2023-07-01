@@ -1,4 +1,5 @@
 import 'package:demo_employee_app/Core/colors/ui_colors.dart';
+import 'package:demo_employee_app/Core/widgets/calender.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,6 +9,8 @@ class EmployeeBloc {
   final startDateCtrl = TextEditingController();
   final endDateCtrl = TextEditingController();
 
+  DateTime focusDate = DateTime.now();
+
   final List<String> designation = [
     'Product Designer',
     'Flutter Developer',
@@ -15,7 +18,7 @@ class EmployeeBloc {
     'Product Owner'
   ];
 
-  showDropDown(BuildContext context) {
+  showDesignationDropDown(BuildContext context) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -58,6 +61,33 @@ class EmployeeBloc {
                 ),
               ),
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  showCalender(BuildContext context, {bool isStartCalender = true}) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.sp),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CalendarPage(
+                onSave: (String p0) {
+                  if (isStartCalender) {
+                    startDateCtrl.text = p0;
+                  } else {
+                    endDateCtrl.text = p0;
+                  }
+                },
+              )
+            ],
           ),
         );
       },
