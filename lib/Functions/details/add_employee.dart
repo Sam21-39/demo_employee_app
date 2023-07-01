@@ -36,7 +36,7 @@ class _AddEmployeePageState extends State<EmployeePage> {
           ),
         ),
       ),
-      backgroundColor: UIColors.background,
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: Container(
         width: double.maxFinite,
@@ -160,7 +160,7 @@ class _AddEmployeePageState extends State<EmployeePage> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                        hintText: 'No date',
+                        hintText: 'Start date',
                         hintStyle: TextStyle(
                           color: const Color(0xFF949C9E),
                           fontSize: 16.sp,
@@ -214,7 +214,7 @@ class _AddEmployeePageState extends State<EmployeePage> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                        hintText: 'No date',
+                        hintText: 'End date',
                         hintStyle: TextStyle(
                           color: const Color(0xFF949C9E),
                           fontSize: 16.sp,
@@ -232,6 +232,76 @@ class _AddEmployeePageState extends State<EmployeePage> {
             )
           ],
         ),
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const Divider(),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 16.sp),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    employeeBloc.onCancel(context);
+                  },
+                  child: Container(
+                    width: 73.w,
+                    height: 40.w,
+                    decoration: ShapeDecoration(
+                      color: UIColors.baseLight,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Cancel',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: UIColors.base,
+                          fontSize: 14.sp,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16.w,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    employeeBloc.onSubmit(context);
+                  },
+                  child: Container(
+                    width: 73.w,
+                    height: 40.w,
+                    decoration: ShapeDecoration(
+                      color: UIColors.base,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Save',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

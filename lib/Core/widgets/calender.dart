@@ -1,3 +1,4 @@
+import 'package:demo_employee_app/Core/utils/logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,9 +7,13 @@ import '../colors/ui_colors.dart';
 
 class CalendarPage extends StatefulWidget {
   final Function(String)? onSave;
+  final bool isStartDate;
+  final DateTime? startDate;
   const CalendarPage({
     super.key,
     this.onSave,
+    this.startDate,
+    this.isStartDate = true,
   });
 
   @override
@@ -42,7 +47,11 @@ class _CalendarPageState extends State<CalendarPage> {
     'November',
     'December'
   ];
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now(),
+      tempDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+  bool isNoDateSelected = false;
 
   void _previousMonth() {
     setState(() {});
@@ -91,9 +100,9 @@ class _CalendarPageState extends State<CalendarPage> {
         (index) {
           final DateTime day =
               DateTime(_selectedDate.year, _selectedDate.month, index + 1);
-          final bool isSelected = day == _selectedDate;
 
-          return _buildCalendarTile(day, isSelected);
+          return _buildCalendarTile(
+              day, day == _selectedDate, day.day == DateTime.now().day);
         },
       ),
     );
@@ -101,19 +110,16 @@ class _CalendarPageState extends State<CalendarPage> {
     return calendarTiles;
   }
 
-  Widget _buildCalendarTile(DateTime date, bool isSelected) {
-    final bool isToday = date == DateTime.now();
+  Widget _buildCalendarTile(DateTime date, bool isSelected, bool isToday) {
     final TextStyle defaultStyle =
         TextStyle(color: isSelected ? Colors.white : UIColors.text);
 
     TextStyle textStyle = defaultStyle;
 
     if (isToday) {
-      textStyle =
-          const TextStyle(color: UIColors.base, fontWeight: FontWeight.bold);
+      textStyle.copyWith(color: UIColors.base, fontWeight: FontWeight.bold);
     } else if (isSelected) {
-      textStyle =
-          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
+      textStyle.copyWith(color: Colors.white, fontWeight: FontWeight.bold);
     }
 
     return GestureDetector(
@@ -130,7 +136,17 @@ class _CalendarPageState extends State<CalendarPage> {
         child: Center(
           child: Text(
             date.day.toString(),
-            style: textStyle,
+            style: textStyle.copyWith(
+                color: isToday && isSelected
+                    ? Colors.white
+                    : isToday
+                        ? UIColors.base
+                        : isSelected
+                            ? Colors.white
+                            : UIColors.text,
+                fontWeight: isToday || isSelected
+                    ? FontWeight.bold
+                    : FontWeight.normal),
           ),
         ),
       ),
@@ -144,172 +160,261 @@ class _CalendarPageState extends State<CalendarPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                flex: 5,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {});
-                    _selectedDate = DateTime.now();
-                  },
-                  child: Container(
-                    height: 36.h,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      color: UIColors.baseLight,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Today',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: UIColors.base,
-                            fontSize: 14.sp,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
+          widget.isStartDate
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {});
+                          _selectedDate = tempDate;
+                        },
+                        child: Container(
+                          height: 36.h,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: UIColors.baseLight,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Today',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: UIColors.base,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              const Spacer(
-                flex: 1,
-              ),
-              Expanded(
-                flex: 5,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {});
-                    _selectedDate = _selectedDate.add(const Duration(days: 7));
-                  },
-                  child: Container(
-                    height: 36.h,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      color: UIColors.baseLight,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                    const Spacer(
+                      flex: 1,
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Next ${weekDay[_selectedDate.add(const Duration(days: 8)).weekday]}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: UIColors.base,
-                            fontSize: 14.sp,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
+                    Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {});
+                          _selectedDate =
+                              _selectedDate.add(const Duration(days: 7));
+                        },
+                        child: Container(
+                          height: 36.h,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: UIColors.baseLight,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Next ${weekDay[_selectedDate.add(const Duration(days: 8)).weekday]}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: UIColors.base,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {});
+                          _selectedDate = tempDate;
+                          isNoDateSelected = true;
+                        },
+                        child: Container(
+                          height: 36.h,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: UIColors.baseLight,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'No Date',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: UIColors.base,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {});
+                          _selectedDate = tempDate;
+                          isNoDateSelected = false;
+                        },
+                        child: Container(
+                          height: 36.h,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: UIColors.baseLight,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Today',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: UIColors.base,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
           SizedBox(
             height: 16.h,
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                flex: 5,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {});
-                    _selectedDate = _selectedDate.add(const Duration(days: 8));
-                  },
-                  child: Container(
-                    height: 36.h,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      color: UIColors.baseLight,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Next ${weekDay[_selectedDate.add(const Duration(days: 9)).weekday]}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: UIColors.base,
-                            fontSize: 14.sp,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
+          widget.isStartDate
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {});
+                          _selectedDate =
+                              _selectedDate.add(const Duration(days: 8));
+                        },
+                        child: Container(
+                          height: 36.h,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: UIColors.baseLight,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Next ${weekDay[_selectedDate.add(const Duration(days: 9)).weekday]}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: UIColors.base,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              const Spacer(
-                flex: 1,
-              ),
-              Expanded(
-                flex: 5,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {});
-                    _selectedDate = DateTime.now().add(const Duration(days: 7));
-                  },
-                  child: Container(
-                    height: 36.h,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      color: UIColors.baseLight,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                    const Spacer(
+                      flex: 1,
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'After 1 week',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: UIColors.base,
-                            fontSize: 14.sp,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
+                    Expanded(
+                      flex: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {});
+                          _selectedDate = tempDate.add(const Duration(days: 7));
+                        },
+                        child: Container(
+                          height: 36.h,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: UIColors.baseLight,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'After 1 week',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: UIColors.base,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 16.h,
-          ),
+                  ],
+                )
+              : Container(),
+          widget.isStartDate
+              ? SizedBox(
+                  height: 16.h,
+                )
+              : Container(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -476,8 +581,29 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.onSave!(
-                        '${_selectedDate.day} ${month[_selectedDate.month]} ${_selectedDate.year}');
+                    if (widget.isStartDate) {
+                      widget.onSave!(
+                          '${_selectedDate.day} ${month[_selectedDate.month]} ${_selectedDate.year}');
+                    } else {
+                      if (isNoDateSelected) {
+                        widget.onSave!('No Date');
+                      } else {
+                        Logger.printLog(_selectedDate);
+                        Logger.printLog(widget.startDate);
+                        if (DateTime(_selectedDate.day, _selectedDate.month,
+                                _selectedDate.year)
+                            .isBefore(widget.startDate!)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Previous Date cannot be selected!')));
+                        } else {
+                          widget.onSave!(
+                              '${_selectedDate.day} ${month[_selectedDate.month]} ${_selectedDate.year}');
+                        }
+                      }
+                    }
+
                     Navigator.pop(context);
                   },
                   child: Container(

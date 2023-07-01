@@ -1,5 +1,6 @@
 import 'package:demo_employee_app/Core/colors/ui_colors.dart';
 import 'package:demo_employee_app/Core/widgets/calender.dart';
+import 'package:demo_employee_app/Functions/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -67,6 +68,39 @@ class EmployeeBloc {
     );
   }
 
+  onCancel(BuildContext context) async {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const HomePage(),
+    ));
+  }
+
+  onSubmit(BuildContext context) async {
+    if (isValid(context)) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      ));
+    }
+  }
+
+  bool isValid(context) {
+    if (nameCtrl.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Name can not be empty!')));
+      return false;
+    }
+    if (designationCtrl.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Role can not be empty!')));
+      return false;
+    }
+    if (startDateCtrl.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Start Date can not be empty!')));
+      return false;
+    }
+    return true;
+  }
+
   showCalender(BuildContext context, {bool isStartCalender = true}) {
     return showDialog(
       context: context,
@@ -79,6 +113,10 @@ class EmployeeBloc {
             mainAxisSize: MainAxisSize.min,
             children: [
               CalendarPage(
+                isStartDate: isStartCalender,
+                startDate: DateTime.tryParse(startDateCtrl.text) ??
+                    DateTime(DateTime.now().year, DateTime.now().month,
+                        DateTime.now().day),
                 onSave: (String p0) {
                   if (isStartCalender) {
                     startDateCtrl.text = p0;
