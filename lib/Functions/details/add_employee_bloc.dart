@@ -1,4 +1,6 @@
 import 'package:demo_employee_app/Core/colors/ui_colors.dart';
+import 'package:demo_employee_app/Core/db/database.dart';
+import 'package:demo_employee_app/Core/models/employee.dart';
 import 'package:demo_employee_app/Core/widgets/calender.dart';
 import 'package:demo_employee_app/Functions/home/home.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ class EmployeeBloc {
     'QA Tester',
     'Product Owner'
   ];
+
+  final DatabaseHelper database = DatabaseHelper();
 
   showDesignationDropDown(BuildContext context) {
     return showDialog(
@@ -76,6 +80,13 @@ class EmployeeBloc {
 
   onSubmit(BuildContext context) async {
     if (isValid(context)) {
+      final Employee employee = Employee(
+        name: nameCtrl.text.trim(),
+        role: designationCtrl.text.trim(),
+        startDate: startDateCtrl.text.trim(),
+        endDate: endDateCtrl.text.trim(),
+      );
+      database.addEmployee(employee);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => const HomePage(),
       ));
@@ -96,6 +107,11 @@ class EmployeeBloc {
     if (startDateCtrl.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Start Date can not be empty!')));
+      return false;
+    }
+    if (endDateCtrl.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('End Date can not be empty!')));
       return false;
     }
     return true;
