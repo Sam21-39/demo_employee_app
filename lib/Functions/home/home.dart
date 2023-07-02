@@ -1,6 +1,7 @@
 import 'package:demo_employee_app/Core/colors/ui_colors.dart';
 import 'package:demo_employee_app/Core/models/employee.dart';
 import 'package:demo_employee_app/Core/utils/logger/logger.dart';
+import 'package:demo_employee_app/Functions/details/add_employee.dart';
 import 'package:demo_employee_app/Functions/home/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -112,79 +113,91 @@ class _HomePageState extends State<HomePage> {
                               child: ListView.builder(
                                 itemCount: clist.data!.length,
                                 itemBuilder: (context, index) {
-                                  return SwipeActionCell(
-                                    key: ObjectKey(clist.data![index]),
-                                    trailingActions: <SwipeAction>[
-                                      SwipeAction(
-                                          icon: Padding(
-                                            padding:
-                                                EdgeInsets.only(top: 20.sp),
-                                            child: SvgPicture.asset(
-                                                'assets/images/delete.svg'),
-                                          ),
-                                          title: "",
-                                          onTap: (CompletionHandler
-                                              handler) async {
-                                            Logger.printLog(handler);
-                                            homeBloc.deleteEmployee(
-                                                clist.data![index].eid!);
-                                          },
-                                          color: Colors.red),
-                                    ],
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(16.sp),
-                                          decoration: const BoxDecoration(
-                                              color: Colors.white),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                clist.data![index].name ?? '',
-                                                style: TextStyle(
-                                                  color: UIColors.text,
-                                                  fontSize: 16.sp,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              SizedBox(height: 6.h),
-                                              Text(
-                                                clist.data![index].role ?? '',
-                                                style: TextStyle(
-                                                  color:
-                                                      const Color(0xFF949C9E),
-                                                  fontSize: 14.sp,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                              SizedBox(height: 6.h),
-                                              Text(
-                                                'From ${clist.data![index].startDate}',
-                                                style: TextStyle(
-                                                  color:
-                                                      const Color(0xFF949C9E),
-                                                  fontSize: 12.sp,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                        builder: (context) => EmployeePage(
+                                          employee: clist.data![index],
+                                          isEdititng: true,
+                                          title: 'Edit Employee Details',
                                         ),
-                                        index == clist.data!.length - 1
-                                            ? Container()
-                                            : Container(
-                                                color: Colors.white,
-                                                child: const Divider(),
-                                              ),
+                                      ));
+                                    },
+                                    child: SwipeActionCell(
+                                      key: ObjectKey(clist.data![index]),
+                                      trailingActions: <SwipeAction>[
+                                        SwipeAction(
+                                            icon: Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 20.sp),
+                                              child: SvgPicture.asset(
+                                                  'assets/images/delete.svg'),
+                                            ),
+                                            title: "",
+                                            onTap: (CompletionHandler
+                                                handler) async {
+                                              Logger.printLog(handler);
+                                              homeBloc.deleteEmployee(
+                                                  clist.data![index].eid!);
+                                            },
+                                            color: Colors.red),
                                       ],
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(16.sp),
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  clist.data![index].name ?? '',
+                                                  style: TextStyle(
+                                                    color: UIColors.text,
+                                                    fontSize: 16.sp,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 6.h),
+                                                Text(
+                                                  clist.data![index].role ?? '',
+                                                  style: TextStyle(
+                                                    color:
+                                                        const Color(0xFF949C9E),
+                                                    fontSize: 14.sp,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 6.h),
+                                                Text(
+                                                  'From ${clist.data![index].startDate}',
+                                                  style: TextStyle(
+                                                    color:
+                                                        const Color(0xFF949C9E),
+                                                    fontSize: 12.sp,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          index == clist.data!.length - 1
+                                              ? Container()
+                                              : Container(
+                                                  color: Colors.white,
+                                                  child: const Divider(),
+                                                ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -223,79 +236,91 @@ class _HomePageState extends State<HomePage> {
                               child: ListView.builder(
                                 itemCount: clist.data!.length,
                                 itemBuilder: (context, index) {
-                                  return SwipeActionCell(
-                                    key: ObjectKey(clist.data![index]),
-                                    trailingActions: <SwipeAction>[
-                                      SwipeAction(
-                                          icon: Padding(
-                                            padding:
-                                                EdgeInsets.only(top: 20.sp),
-                                            child: SvgPicture.asset(
-                                                'assets/images/delete.svg'),
-                                          ),
-                                          title: "",
-                                          onTap: (CompletionHandler
-                                              handler) async {
-                                            Logger.printLog(handler);
-                                            homeBloc.deleteEmployee(
-                                                clist.data![index].eid!);
-                                          },
-                                          color: Colors.red),
-                                    ],
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(16.sp),
-                                          decoration: const BoxDecoration(
-                                              color: Colors.white),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                clist.data![index].name ?? '',
-                                                style: TextStyle(
-                                                  color: UIColors.text,
-                                                  fontSize: 16.sp,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              SizedBox(height: 6.h),
-                                              Text(
-                                                clist.data![index].role ?? '',
-                                                style: TextStyle(
-                                                  color:
-                                                      const Color(0xFF949C9E),
-                                                  fontSize: 14.sp,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                              SizedBox(height: 6.h),
-                                              Text(
-                                                '${clist.data![index].startDate} - ${clist.data![index].endDate}',
-                                                style: TextStyle(
-                                                  color:
-                                                      const Color(0xFF949C9E),
-                                                  fontSize: 12.sp,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                        builder: (context) => EmployeePage(
+                                          employee: clist.data![index],
+                                          isEdititng: true,
+                                          title: 'Edit Employee Details',
                                         ),
-                                        index == clist.data!.length - 1
-                                            ? Container()
-                                            : Container(
-                                                color: Colors.white,
-                                                child: const Divider(),
-                                              ),
+                                      ));
+                                    },
+                                    child: SwipeActionCell(
+                                      key: ObjectKey(clist.data![index]),
+                                      trailingActions: <SwipeAction>[
+                                        SwipeAction(
+                                            icon: Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 20.sp),
+                                              child: SvgPicture.asset(
+                                                  'assets/images/delete.svg'),
+                                            ),
+                                            title: "",
+                                            onTap: (CompletionHandler
+                                                handler) async {
+                                              Logger.printLog(handler);
+                                              homeBloc.deleteEmployee(
+                                                  clist.data![index].eid!);
+                                            },
+                                            color: Colors.red),
                                       ],
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(16.sp),
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  clist.data![index].name ?? '',
+                                                  style: TextStyle(
+                                                    color: UIColors.text,
+                                                    fontSize: 16.sp,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 6.h),
+                                                Text(
+                                                  clist.data![index].role ?? '',
+                                                  style: TextStyle(
+                                                    color:
+                                                        const Color(0xFF949C9E),
+                                                    fontSize: 14.sp,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 6.h),
+                                                Text(
+                                                  '${clist.data![index].startDate} - ${clist.data![index].endDate}',
+                                                  style: TextStyle(
+                                                    color:
+                                                        const Color(0xFF949C9E),
+                                                    fontSize: 12.sp,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          index == clist.data!.length - 1
+                                              ? Container()
+                                              : Container(
+                                                  color: Colors.white,
+                                                  child: const Divider(),
+                                                ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },

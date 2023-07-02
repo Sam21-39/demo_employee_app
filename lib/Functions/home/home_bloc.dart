@@ -48,7 +48,7 @@ class HomeBloc {
   addEmployee(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => const EmployeePage(),
+        builder: (context) => EmployeePage(employee: Employee()),
       ),
     );
   }

@@ -102,7 +102,11 @@ class _CalendarPageState extends State<CalendarPage> {
               DateTime(_selectedDate.year, _selectedDate.month, index + 1);
 
           return _buildCalendarTile(
-              day, day == _selectedDate, day.day == DateTime.now().day);
+              day,
+              day == _selectedDate,
+              DateTime(day.year, day.month, day.day) ==
+                  DateTime(DateTime.now().year, DateTime.now().month,
+                      DateTime.now().day));
         },
       ),
     );

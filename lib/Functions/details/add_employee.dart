@@ -1,4 +1,5 @@
 import 'package:demo_employee_app/Core/colors/ui_colors.dart';
+import 'package:demo_employee_app/Core/models/employee.dart';
 import 'package:demo_employee_app/Functions/details/add_employee_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +7,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class EmployeePage extends StatefulWidget {
   final String title;
-  const EmployeePage({super.key, this.title = 'Add Employee Details'});
+  final bool isEdititng;
+  final Employee? employee;
+  const EmployeePage({
+    super.key,
+    this.title = 'Add Employee Details',
+    this.isEdititng = false,
+    this.employee,
+  });
 
   @override
   State<EmployeePage> createState() => _AddEmployeePageState();
@@ -18,7 +26,8 @@ class _AddEmployeePageState extends State<EmployeePage> {
   @override
   void initState() {
     super.initState();
-    employeeBloc = EmployeeBloc();
+    employeeBloc = EmployeeBloc(widget.isEdititng, widget.employee!);
+    employeeBloc.init();
   }
 
   @override

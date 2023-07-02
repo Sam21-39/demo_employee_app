@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EmployeeBloc {
+  final bool isEditing;
+  final Employee employee;
+
   final nameCtrl = TextEditingController();
   final designationCtrl = TextEditingController();
   final startDateCtrl = TextEditingController();
@@ -24,6 +27,17 @@ class EmployeeBloc {
   ];
 
   final DatabaseHelper database = DatabaseHelper();
+
+  EmployeeBloc(this.isEditing, this.employee);
+
+  init() async {
+    if (isEditing) {
+      nameCtrl.text = employee.name!;
+      designationCtrl.text = employee.role!;
+      startDateCtrl.text = employee.startDate!;
+      endDateCtrl.text = employee.endDate!;
+    }
+  }
 
   showDesignationDropDown(BuildContext context) {
     return showDialog(
@@ -82,13 +96,18 @@ class EmployeeBloc {
 
   onSubmit(BuildContext context) async {
     if (isValid(context)) {
-      final Employee employee = Employee(
+      final Employee emp = Employee(
         name: nameCtrl.text.trim(),
         role: designationCtrl.text.trim(),
         startDate: startDateCtrl.text.trim(),
         endDate: endDateCtrl.text.trim(),
       );
-      database.addEmployee(employee);
+      if (isEditing) {
+        emp.eid = employee.eid!;
+        database.updateEmployee(emp, employee.eid!);
+      } else {
+        database.addEmployee(emp);
+      }
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => const HomePage(),
       ));

@@ -21,6 +21,17 @@ class DatabaseHelper {
     Logger.printLog(res);
   }
 
+  void updateEmployee(Employee employee, int id) async {
+    final db = await DatabaseHelper.init();
+    final res = await db.update(
+      table,
+      employee.toJson(),
+      where: 'id=?',
+      whereArgs: [id],
+    );
+    Logger.printLog(res);
+  }
+
   void deleteEmployee(int id) async {
     final db = await DatabaseHelper.init();
     try {
