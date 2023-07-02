@@ -590,9 +590,9 @@ class _CalendarPageState extends State<CalendarPage> {
                       } else {
                         Logger.printLog(_selectedDate);
                         Logger.printLog(widget.startDate);
-                        if (DateTime(_selectedDate.day, _selectedDate.month,
-                                _selectedDate.year)
-                            .isBefore(widget.startDate!)) {
+                        if (_selectedDate
+                            .difference(widget.startDate!)
+                            .isNegative) {
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text(

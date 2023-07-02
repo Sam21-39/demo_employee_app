@@ -8,15 +8,40 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class HomeBloc {
   final currentListCtrl = StreamController<List<Employee>>.broadcast();
+  final previousListCtrl = StreamController<List<Employee>>.broadcast();
+  final allListCtrl = StreamController<List<Employee>>.broadcast();
   final DatabaseHelper database = DatabaseHelper();
   init() {
+    getAllEmployeeList();
     getCurrentEmployeeList();
+    getPreviousEmployeeList();
+  }
+
+  void getAllEmployeeList() async {
+    EasyLoading.show();
+    final List<Employee> list = await database.getAllEmployees();
+    allListCtrl.sink.add(list);
+    EasyLoading.dismiss();
   }
 
   void getCurrentEmployeeList() async {
     EasyLoading.show();
     final List<Employee> list = await database.getAllCurrentEmployees();
     currentListCtrl.sink.add(list);
+    EasyLoading.dismiss();
+  }
+
+  void getPreviousEmployeeList() async {
+    EasyLoading.show();
+    final List<Employee> list = await database.getAllPreviousEmployees();
+    previousListCtrl.sink.add(list);
+    EasyLoading.dismiss();
+  }
+
+  deleteEmployee(int id) async {
+    EasyLoading.show();
+    database.deleteEmployee(id);
+    init();
     EasyLoading.dismiss();
   }
 

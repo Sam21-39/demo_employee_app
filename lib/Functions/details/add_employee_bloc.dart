@@ -18,7 +18,9 @@ class EmployeeBloc {
     'Product Designer',
     'Flutter Developer',
     'QA Tester',
-    'Product Owner'
+    'Product Owner',
+    'Full-stack Developer',
+    'Senior Software developer',
   ];
 
   final DatabaseHelper database = DatabaseHelper();

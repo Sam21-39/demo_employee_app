@@ -21,11 +21,48 @@ class DatabaseHelper {
     Logger.printLog(res);
   }
 
+  void deleteEmployee(int id) async {
+    final db = await DatabaseHelper.init();
+    try {
+      final res = await db.delete(table, where: 'id=?', whereArgs: [id]);
+      Logger.printLog(res);
+    } catch (e) {
+      Logger.printLog(e.toString());
+    }
+  }
+
+  Future<List<Employee>> getAllEmployees() async {
+    final db = await DatabaseHelper.init();
+    try {
+      final res = await db.query(table);
+      return List.generate(
+          res.length, (index) => Employee.fromJson(res[index]));
+    } catch (e) {
+      Logger.printLog(e.toString());
+    }
+
+    return [];
+  }
+
   Future<List<Employee>> getAllCurrentEmployees() async {
     final db = await DatabaseHelper.init();
     try {
       final res =
           await db.query(table, where: 'end_date=?', whereArgs: ['No Date']);
+      return List.generate(
+          res.length, (index) => Employee.fromJson(res[index]));
+    } catch (e) {
+      Logger.printLog(e.toString());
+    }
+
+    return [];
+  }
+
+  Future<List<Employee>> getAllPreviousEmployees() async {
+    final db = await DatabaseHelper.init();
+    try {
+      final res =
+          await db.query(table, where: 'end_date!=?', whereArgs: ['No Date']);
       return List.generate(
           res.length, (index) => Employee.fromJson(res[index]));
     } catch (e) {

@@ -9,12 +9,14 @@ Employee employeeFromJson(String str) => Employee.fromJson(json.decode(str));
 String employeeToJson(Employee data) => json.encode(data.toJson());
 
 class Employee {
+  int? eid;
   String? name;
   String? role;
   String? startDate;
   String? endDate;
 
   Employee({
+    this.eid,
     this.name,
     this.role,
     this.startDate,
@@ -22,6 +24,7 @@ class Employee {
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) => Employee(
+        eid: json['id'],
         name: json["name"],
         role: json["role"],
         startDate: json["start_date"],
@@ -29,6 +32,7 @@ class Employee {
       );
 
   Map<String, dynamic> toJson() => {
+        'id': eid,
         "name": name,
         "role": role,
         "start_date": startDate,
